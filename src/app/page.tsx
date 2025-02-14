@@ -130,8 +130,8 @@ export default function Home() {
       {isLoaded ?
         <div className="flex w-96 gap-2 flex-col">
           <h1 className="text-xl font-bold">Select car make or type it below</h1>
-          <div className="relative border-2 border-black border-solid rounded-md mb-2">
-            <div className="flex items-center justify-between"> 
+          <div className="z-10 relative border-2 border-black border-solid rounded-md mb-2">
+            <div className="flex items-center justify-between">
               <input
                 className="drop-down-item border-0 cursor-text"
                 placeholder="Search car make"
@@ -181,21 +181,19 @@ export default function Home() {
 
           </select>
 
-          <button className={`
+
+          <Link href={`/result/${selectedMake?.Make_ID}/${selectYear}`}>
+            <button className={`
           ${isCarDataOk ? "cursor-pointer hover:bg-gray-200" : "cursor-not-allowed opacity-50"} min-w-20 p-1 
           border-2 
           border-solid border-black
           rounded-md
           `}
-            disabled={isCarDataOk}
-          >
-            {isCarDataOk ?
-              <Link href={`/result/${selectedMake?.Make_ID}/${selectYear}`}>
-                Next
-              </Link>
-              :
-              "Next"}
-          </button>
+              disabled={!isCarDataOk}
+            >
+              Next
+            </button>
+          </Link>
         </div>
         :
         <h1 className="font-bold text-4xl">Loading...</h1>

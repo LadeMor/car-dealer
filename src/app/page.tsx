@@ -1,25 +1,24 @@
-"use client"
+'use client';
 
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-import arrow_down from "@/assets/icons/arrow-down.svg";
+import arrow_down from '@/assets/icons/arrow-down.svg';
 
 interface Car {
-  MakeId: number,
-  MakeName: string,
-  VehicleTypeId: number,
-  VehicleTypeName: string
+  MakeId: number;
+  MakeName: string;
+  VehicleTypeId: number;
+  VehicleTypeName: string;
 }
 
 interface Make {
-  Make_ID: number,
-  Make_Name: string
+  Make_ID: number;
+  Make_Name: string;
 }
 
 export default function Home() {
-
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   console.log(apiUrl);
 
@@ -27,9 +26,9 @@ export default function Home() {
   const [makeList, setMakeList] = useState<Make[]>([]);
 
   const [filteredMakeList, setFilteredMakeList] = useState<Make[]>([]);
-  const [makeSelectInput, setMakeSelectInput] = useState<string>("");
+  const [makeSelectInput, setMakeSelectInput] = useState<string>('');
   const [selectedMake, setSelectedMake] = useState<Make>();
-  const [selectYear, setSelectYear] = useState<string>("2015");
+  const [selectYear, setSelectYear] = useState<string>('2015');
   const [isCarDataOk, setIsCarDataOk] = useState<boolean>(false);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -39,44 +38,44 @@ export default function Home() {
   const startYear = 2015;
   const endYear = new Date().getFullYear();
 
-  const yearsArray = Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index);
+  const yearsArray = Array.from(
+    { length: endYear - startYear + 1 },
+    (_, index) => startYear + index,
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [carResponse, makeResponse] = await Promise.all([
           fetch(`${apiUrl}/GetMakesForVehicleType/car?format=json`),
-          fetch(`${apiUrl}/getallmakes?format=json`)
-        ])
+          fetch(`${apiUrl}/getallmakes?format=json`),
+        ]);
 
         if (carResponse.ok && makeResponse.ok) {
-
           const [carResult, makeResult] = await Promise.all([
             carResponse.json(),
-            makeResponse.json()
-          ])
+            makeResponse.json(),
+          ]);
 
           setCarList(carResult.Results);
           setMakeList(makeResult.Results);
           setFilteredMakeList(makeResult.Results);
-
         } else {
           throw Error();
         }
+      } catch (error) {
+        console.error('Error while loading cars: ' + error);
       }
-      catch (error) {
-        console.error("Error while loading cars: " + error);
-      }
-    }
+    };
 
     fetchData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (selectedMake && selectYear) {
       setIsCarDataOk(true);
     }
-  }, [selectedMake, selectYear])
+  }, [selectedMake, selectYear]);
 
   useEffect(() => {
     if (carList.length === 0 && makeList.length === 0) {
@@ -84,13 +83,11 @@ export default function Home() {
     } else {
       setIsLoaded(true);
     }
-  }, [carList, makeList])
-
-
+  }, [carList, makeList]);
 
   const switchDropDownDisplay = () => {
     setShowCarMakeDropdown(!showCareMakeDropdown);
-  }
+  };
 
   const onDropDownInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -101,35 +98,35 @@ export default function Home() {
 
     let updatedFilteredList = makeList;
 
-    if (userInput.trim() != "") {
-      updatedFilteredList = makeList.filter(m =>
-        m.Make_Name.toLowerCase().includes(userInput.toLowerCase().trim())
-      )
+    if (userInput.trim() != '') {
+      updatedFilteredList = makeList.filter((m) =>
+        m.Make_Name.toLowerCase().includes(userInput.toLowerCase().trim()),
+      );
     }
 
     setFilteredMakeList(updatedFilteredList);
-  }
+  };
 
   useEffect(() => {
     console.log(filteredMakeList);
-  }, [filteredMakeList])
+  }, [filteredMakeList]);
 
   const onMakeDropdownOptionClick = (make: Make) => {
     setShowCarMakeDropdown(false);
     setSelectedMake(make);
     setMakeSelectInput(make.Make_Name);
     console.log(make);
-  }
+  };
 
   const onSelectYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
 
     setSelectYear(e.target.value);
-  }
+  };
 
   return (
     <section className="mt-9 mb-9 flex justify-center">
-      {isLoaded ?
+      {isLoaded ? (
         <div className="flex w-96 gap-2 flex-col">
           <h1 className="text-xl font-bold">Select car make or type it below</h1>
           <div className="z-10 relative border-2 border-black border-solid rounded-md mb-2">
@@ -147,23 +144,27 @@ export default function Home() {
                 alt="Arrow down"
                 width={30}
                 height={30}
-                className="curson-pointer" />
+                className="curson-pointer"
+              />
             </div>
-            <ul className={`${showCareMakeDropdown ? "block" : "hidden"} 
+            <ul
+              className={`${showCareMakeDropdown ? 'block' : 'hidden'} 
           absolute border-2 
-          border-black border-solid rounded-md bg-white max-h-96 overflow-scroll`}>
-              {
-                filteredMakeList.length > 0 ?
-                  filteredMakeList.map((make, index) => (
-                    <li
-                      key={make.Make_ID}
-                      className="drop-down-item"
-                      onClick={() => onMakeDropdownOptionClick(make)}
-                    >{make.Make_Name}</li>
-                  ))
-                  :
-                  <h1 className="text-xl p-1">No result</h1>
-              }
+          border-black border-solid rounded-md bg-white max-h-96 overflow-scroll`}
+            >
+              {filteredMakeList.length > 0 ? (
+                filteredMakeList.map((make, index) => (
+                  <li
+                    key={make.Make_ID}
+                    className="drop-down-item"
+                    onClick={() => onMakeDropdownOptionClick(make)}
+                  >
+                    {make.Make_Name}
+                  </li>
+                ))
+              ) : (
+                <h1 className="text-xl p-1">No result</h1>
+              )}
             </ul>
           </div>
           <h1 className="text-xl font-bold">Select car year</h1>
@@ -173,18 +174,20 @@ export default function Home() {
             id="year-select"
             className="border-2 border-solid border-black rounded-md h-9"
           >
-            {yearsArray ?
+            {yearsArray ? (
               yearsArray.map((year, index) => (
-                <option value={year} key={index}>{year}</option>
+                <option value={year} key={index}>
+                  {year}
+                </option>
               ))
-              :
+            ) : (
               <h1>Loading</h1>
-            }
-
+            )}
           </select>
           <Link href={`/result/${selectedMake?.Make_ID}/${selectYear}`}>
-            <button className={`
-          ${isCarDataOk ? "cursor-pointer hover:bg-gray-200" : "cursor-not-allowed opacity-50"} min-w-20 p-1 
+            <button
+              className={`
+          ${isCarDataOk ? 'cursor-pointer hover:bg-gray-200' : 'cursor-not-allowed opacity-50'} min-w-20 p-1 
           border-2 
           border-solid border-black
           rounded-md
@@ -195,9 +198,9 @@ export default function Home() {
             </button>
           </Link>
         </div>
-        :
+      ) : (
         <h1 className="font-bold text-4xl">Loading...</h1>
-      }
+      )}
     </section>
   );
 }

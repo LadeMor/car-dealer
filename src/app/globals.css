@@ -20,6 +20,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.drop-down-item{
-  @apply  cursor-pointer  min-w-20 p-1 hover:bg-gray-200 
+.drop-down-item {
+  @apply cursor-pointer  min-w-20 p-1 hover:bg-gray-200;
 }

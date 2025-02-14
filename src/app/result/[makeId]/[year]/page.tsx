@@ -15,7 +15,6 @@ const ResultPage = async ({ params }: { params: Promise<{ makeId: string; year: 
 
     return (
         <section>
-
             <Link href="/">
                 <button
                     className="mt-6 mb-3 

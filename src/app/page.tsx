@@ -1,6 +1,5 @@
 "use client"
 
-import { Header } from "@/components/Header";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -20,6 +19,9 @@ interface Make {
 }
 
 export default function Home() {
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  console.log(apiUrl);
 
   const [carList, setCarList] = useState<Car[]>([]);
   const [makeList, setMakeList] = useState<Make[]>([]);
@@ -43,8 +45,8 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const [carResponse, makeResponse] = await Promise.all([
-          fetch("https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json"),
-          fetch("https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json")
+          fetch(`${apiUrl}/GetMakesForVehicleType/car?format=json`),
+          fetch(`${apiUrl}/getallmakes?format=json`)
         ])
 
         if (carResponse.ok && makeResponse.ok) {
@@ -180,8 +182,6 @@ export default function Home() {
             }
 
           </select>
-
-
           <Link href={`/result/${selectedMake?.Make_ID}/${selectYear}`}>
             <button className={`
           ${isCarDataOk ? "cursor-pointer hover:bg-gray-200" : "cursor-not-allowed opacity-50"} min-w-20 p-1 
